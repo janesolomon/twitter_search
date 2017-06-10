@@ -40,8 +40,6 @@ def find_context(tweet, char):
     # If character is not found (i.e. loc = -1) then return None
     if loc == -1:
         return None, None, None, None
-    # Word location of char
-    wloc = next((tweet_word_list.index(w) for w in tweet_word_list if char in w), None)
 
     # Finds character before and after
     if len(tweet_clean) == 1:
@@ -55,6 +53,9 @@ def find_context(tweet, char):
     else:
         char_before = tweet_clean[loc - 1]
         char_after = tweet_clean[loc + 1]
+
+    # Word location of char
+    wloc = next((tweet_word_list.index(w) for w in tweet_word_list if char in w), None)
 
     # Finds word before and after
     if len(tweet_word_list) == 1:
