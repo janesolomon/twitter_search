@@ -27,3 +27,7 @@ wheels/
 
 # DS Store
 .DS_Store
+
+# Testing
+.coverage
+htmlcov

@@ -1,0 +1,27 @@
+language: python
+
+python:
+  - 3.6
+  - 2.7
+  - 3.5
+  - 3.4
+  - 3.3
+
+cache: pip
+
+install:
+  - pip install coverage
+
+script:
+  - coverage run --include=twitter_search_funcs.py test_twitter_search_funcs.py
+
+after_success:
+  # Report coverage and send to Codecov
+  - coverage report
+  - pip install codecov && codecov
+
+after_script:
+  - coverage report
+
+matrix:
+  fast_finish: true
