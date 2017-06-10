@@ -6,7 +6,6 @@ Functions for searching Twitter json
 
 """
 
-import os
 import sys
 
 __author__ = "Jane Solomon and Jeremy Smith"
@@ -27,9 +26,9 @@ def progress(count, total, suffix=''):
 
 def find_context(tweet, char):
     """Finds a character (char) in tweet and its nearest neighbors
-    both character and word. Ignores spaces for the nearest character search. 
-    Leaves new line character in results to avoid associating character 
-    separated by a new line as a nearest neighbor. Only searches for 
+    both character and word. Ignores spaces for the nearest character search.
+    Leaves new line character in results to avoid associating character
+    separated by a new line as a nearest neighbor. Only searches for
     the first instance of the character."""
 
     # Tweet split into a list of words
@@ -68,6 +67,6 @@ def find_context(tweet, char):
         word_after = None
     else:
         word_before = tweet_word_list[wloc - 1]
-        word_after = tweet_word_list[wloc + 1] 
+        word_after = tweet_word_list[wloc + 1]
 
     return char_before, word_before, char_after, word_after
