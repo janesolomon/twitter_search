@@ -10,9 +10,14 @@ python:
 cache: pip
 
 install:
-  - pip install coverage
+  - pip install coverage pyflakes
 
 script:
+
+  # Static analysis
+  - pyflakes .
+
+  # Unit tests
   - coverage run --include=twitter_search_funcs.py test_twitter_search_funcs.py
 
 after_success:
