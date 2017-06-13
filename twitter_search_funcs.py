@@ -6,7 +6,6 @@ Functions for searching Twitter json
 
 """
 
-import os
 import sys
 
 __author__ = "Jane Solomon and Jeremy Smith"
@@ -27,9 +26,9 @@ def progress(count, total, suffix=''):
 
 def find_context(tweet, char):
     """Finds a character (char) in tweet and its nearest neighbors
-    both character and word. Ignores spaces for the nearest character search. 
-    Leaves new line character in results to avoid associating character 
-    separated by a new line as a nearest neighbor. Only searches for 
+    both character and word. Ignores spaces for the nearest character search.
+    Leaves new line character in results to avoid associating character
+    separated by a new line as a nearest neighbor. Only searches for
     the first instance of the character."""
 
     # Tweet split into a list of words
@@ -41,8 +40,6 @@ def find_context(tweet, char):
     # If character is not found (i.e. loc = -1) then return None
     if loc == -1:
         return None, None, None, None
-    # Word location of char
-    wloc = next((tweet_word_list.index(w) for w in tweet_word_list if char in w), None)
 
     # Finds character before and after
     if len(tweet_clean) == 1:
@@ -57,6 +54,9 @@ def find_context(tweet, char):
         char_before = tweet_clean[loc - 1]
         char_after = tweet_clean[loc + 1]
 
+    # Word location of char
+    wloc = next((tweet_word_list.index(w) for w in tweet_word_list if char in w), None)
+
     # Finds word before and after
     if len(tweet_word_list) == 1:
         word_before, word_after = None, None
@@ -68,6 +68,6 @@ def find_context(tweet, char):
         word_after = None
     else:
         word_before = tweet_word_list[wloc - 1]
-        word_after = tweet_word_list[wloc + 1] 
+        word_after = tweet_word_list[wloc + 1]
 
     return char_before, word_before, char_after, word_after
