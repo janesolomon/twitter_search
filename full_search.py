@@ -1,12 +1,12 @@
-import os
-import sys
-import json
+#!/usr/bin/env python
+# encoding: utf-8
 import bz2
-import seaborn
+import json
+import os
 import pandas as pd
-from unicode_codes import EMOJI_UNICODE
-from twitter_search_funcs import *
 from timeit import default_timer as timer
+from twitter_search_funcs import find_context, progress
+from unicode_codes import EMOJI_UNICODE
 
 data_path = "/your/data/path/archive-twitter-2016-08/"
 
