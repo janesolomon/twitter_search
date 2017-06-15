@@ -33,7 +33,8 @@ for day in range(31):
         for i, f in enumerate(files):
             progress(i + hour * len(files),
                      len(files) * 24,
-                     suffix="Searching Day {}, Hour {}".format(day_str, hour_str))
+                     suffix="Searching Day {}, Hour {}".format(day_str,
+                                                               hour_str))
             fbz = bz2.BZ2File(os.path.join(file_path, f), 'rb')
             try:
                 fdec = fbz.read()
@@ -88,9 +89,12 @@ print("Total w/ Before : {:d}".format(counter_total_before))
 print("Total w/ After  : {:d}".format(counter_total_after))
 
 # Convert output to dataframe
-df_before = pd.DataFrame(list(counterdict_before.items()), columns=['Emoji', 'CountBefore'])
-df_after = pd.DataFrame(list(counterdict_after.items()), columns=['Emoji', 'CountAfter'])
-df_lang = pd.DataFrame(list(counterdict_lang.items()), columns=['Lang', 'Count'])
+df_before = pd.DataFrame(list(counterdict_before.items()),
+                         columns=['Emoji', 'CountBefore'])
+df_after = pd.DataFrame(list(counterdict_after.items()),
+                        columns=['Emoji', 'CountAfter'])
+df_lang = pd.DataFrame(list(counterdict_lang.items()),
+                       columns=['Lang', 'Count'])
 
 # Merge before and after dataframes
 df_all = pd.merge(df_before, df_after, on='Emoji', how='outer')
@@ -98,8 +102,10 @@ df_all = pd.merge(df_before, df_after, on='Emoji', how='outer')
 df_all.sort_values('CountBefore', ascending=False).head()
 df_all.sort_values('CountAfter', ascending=False).head()
 df_lang.sort_values('Count', ascending=False).head()
-df_all.sort_values('CountBefore', ascending=False).head(20).plot.bar(y='CountBefore')
-df_all.sort_values('CountAfter', ascending=False).head(20).plot.bar(y='CountAfter')
+df_all.sort_values('CountBefore',
+                   ascending=False).head(20).plot.bar(y='CountBefore')
+df_all.sort_values('CountAfter',
+                   ascending=False).head(20).plot.bar(y='CountAfter')
 
 # Export results as CSV files
 df_all.to_csv("./alldata.csv")
