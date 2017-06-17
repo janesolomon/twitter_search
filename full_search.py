@@ -108,5 +108,5 @@ df_all.sort_values('CountAfter',
                    ascending=False).head(20).plot.bar(y='CountAfter')
 
 # Export results as CSV files
-df_all.to_csv("./alldata.csv")
-df_lang.to_csv("./langdata.csv")
+df_all.to_csv("./alldata.csv", encoding="utf-8")
+df_lang.to_csv("./langdata.csv", encoding="utf-8")
