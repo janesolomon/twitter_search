@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+Search a Twitter archive (from archive.org) to find the characters which
+occur before and after a chosen target.
+"""
+import argparse
 import bz2
 import json
 import multiprocessing
@@ -8,8 +15,6 @@ from unicode_codes import EMOJI_UNICODE
 from timeit import default_timer as timer
 from tqdm import tqdm  # pip install tqdm
 from twitter_search_funcs import find_context
-
-data_path = "/your/data/path/archive-twitter-2016-08/"
 
 # Character to match
 match = EMOJI_UNICODE[':pistol:']
@@ -97,6 +102,16 @@ def worker(filename):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Search a Twitter archive (from archive.org) to find the "
+                    "characters which occur before and after a chosen target",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument(
+        '-p', '--data_path',
+        default="/your/data/path/archive-twitter-2016-08/",
+        help="Path to the Twitter archive")
+    args = parser.parse_args()
+
     number_of_processes = multiprocessing.cpu_count()
     multiprocessing.freeze_support()  # Prevent an error on Windows
 
@@ -107,7 +122,7 @@ if __name__ == "__main__":
         day_str = "{:02d}".format(day + 1)
         for hour in range(24):
             hour_str = "{:02d}".format(hour)
-            file_path = os.path.join(data_path, day_str, hour_str)
+            file_path = os.path.join(args.data_path, day_str, hour_str)
             files = os.listdir(file_path)
 
             for i, f in enumerate(files):
