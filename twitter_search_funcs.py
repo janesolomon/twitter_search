@@ -6,22 +6,8 @@ Functions for searching Twitter json
 
 """
 
-import sys
-
 __author__ = "Jane Solomon and Jeremy Smith"
 __version__ = "1.0"
-
-
-def progress(count, total, suffix=''):
-    """Progress bar function"""
-    bar_len = 60
-    filled_len = int(round(bar_len * count / float(total)))
-
-    percents = round(100.0 * count / float(total), 1)
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
-
-    sys.stdout.write('[%s] %#5.1f%s ...%s\r' % (bar, percents, '%', suffix))
-    sys.stdout.flush()
 
 
 def find_context(tweet, char):

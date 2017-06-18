@@ -2,11 +2,12 @@ import bz2
 import json
 import multiprocessing
 import os
-import pandas as pd
+import pandas as pd  # pip install pandas
 from collections import Counter
 from unicode_codes import EMOJI_UNICODE
 from timeit import default_timer as timer
-from twitter_search_funcs import find_context, progress
+from tqdm import tqdm  # pip install tqdm
+from twitter_search_funcs import find_context
 
 data_path = "/your/data/path/archive-twitter-2016-08/"
 
@@ -101,6 +102,7 @@ if __name__ == "__main__":
 
     # Main search loop
     start_t = timer()
+    all_files = []
     for day in range(31):
         day_str = "{:02d}".format(day + 1)
         for hour in range(24):
@@ -111,32 +113,38 @@ if __name__ == "__main__":
             for i, f in enumerate(files):
                 files[i] = os.path.join(file_path, f)
 
-            pool = multiprocessing.Pool(number_of_processes)
-            results = pool.map(worker, files)
-            pool.close()
-            pool.join()
+            all_files.extend(files)
 
-            for i, result_dict in enumerate(results):
+    pool = multiprocessing.Pool(number_of_processes)
+    try:
+        for result_dict in tqdm(pool.imap_unordered(worker,
+                                                    all_files,
+                                                    chunksize=10),
+                                total=len(all_files),
+                                unit="files"):
 
-                progress(i + hour * len(results),
-                         len(results) * 24,
-                         suffix="Searching Day {}, Hour {}".format(
-                            day_str, hour_str))
+            if result_dict is None:
+                continue
 
-                if result_dict is not None:
-                    counter_total_tweets += result_dict['counter_total_tweets']
-                    counter_total_match += result_dict['counter_total_match']
-                    counter_total_before += result_dict['counter_total_before']
-                    counter_total_after += result_dict['counter_total_after']
-                    counterdict_before = sum_dicts(
-                        counterdict_before,
-                        result_dict['counterdict_before'])
-                    counterdict_after = sum_dicts(
-                        counterdict_after,
-                        result_dict['counterdict_after'])
-                    counterdict_lang = sum_dicts(
-                        counterdict_lang,
-                        result_dict['counterdict_lang'])
+            counter_total_tweets += result_dict['counter_total_tweets']
+            counter_total_match += result_dict['counter_total_match']
+            counter_total_before += result_dict['counter_total_before']
+            counter_total_after += result_dict['counter_total_after']
+            counterdict_before = sum_dicts(
+                counterdict_before,
+                result_dict['counterdict_before'])
+            counterdict_after = sum_dicts(
+                counterdict_after,
+                result_dict['counterdict_after'])
+            counterdict_lang = sum_dicts(
+                counterdict_lang,
+                result_dict['counterdict_lang'])
+
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt")
+    finally:
+        pool.terminate()
+        pool.join()
 
     end_t = timer()
 
