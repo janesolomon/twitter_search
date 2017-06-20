@@ -110,6 +110,12 @@ if __name__ == "__main__":
         '-p', '--data_path',
         default="/your/data/path/archive-twitter-2016-08/",
         help="Path to the Twitter archive")
+    parser.add_argument(
+        '-d', '--days', type=int, default=31,
+        help="How many days to search (for testing)")
+    parser.add_argument(
+        '-hr', '--hours', type=int, default=24,
+        help="How many hours to search (for testing)")
     args = parser.parse_args()
 
     number_of_processes = multiprocessing.cpu_count()
@@ -118,9 +124,9 @@ if __name__ == "__main__":
     # Main search loop
     start_t = timer()
     all_files = []
-    for day in range(31):
+    for day in range(args.days):
         day_str = "{:02d}".format(day + 1)
-        for hour in range(24):
+        for hour in range(args.hours):
             hour_str = "{:02d}".format(hour)
             file_path = os.path.join(args.data_path, day_str, hour_str)
             files = os.listdir(file_path)
