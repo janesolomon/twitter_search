@@ -6,7 +6,7 @@ Data literal storing emoji names and unicode codes
 """
 
 
-__all__ = ['EMOJI_UNICODE', 'UNICODE_EMOJI', 'EMOJI_ALIAS_UNICODE', 'UNICODE_EMOJI_ALIAS']
+__all__ = ['EMOJI_UNICODE', 'UNICODE_EMOJI', 'EMOJI_ALIAS_UNICODE', 'UNICODE_EMOJI_ALIAS', 'EMOJI_UNICODE_SET']
 
 
 EMOJI_UNICODE = {
@@ -3709,3 +3709,5 @@ EMOJI_ALIAS_UNICODE = dict(EMOJI_UNICODE.items(), **{
 
 UNICODE_EMOJI = {v: k for k, v in EMOJI_UNICODE.items()}
 UNICODE_EMOJI_ALIAS = {v: k for k, v in EMOJI_ALIAS_UNICODE.items()}
+
+EMOJI_UNICODE_SET = set(EMOJI_UNICODE.values())
