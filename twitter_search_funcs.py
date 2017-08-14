@@ -5,7 +5,7 @@ twittersearchfuncs.py
 Functions for searching Twitter json
 
 """
-
+from collections import Counter
 from unicode_codes import EMOJI_UNICODE_SET
 
 __author__ = "Jane Solomon and Jeremy Smith"
@@ -94,3 +94,13 @@ def smoothed_relative_freq(n_focus, n_ref, size_focus, size_ref, N=1):
     f_ref = n_ref * 1.e6 / size_ref
 
     return (f_focus + N) / (f_ref + N)
+
+
+def sum_dicts(a, b):
+    """Merge dictionaries, summing their values.
+    For example:
+    a = {"x": 1, "y": 1}
+    b = {"x": 1, "z": 1}
+    returns {"x": 2, "y": 1, "z": 1}
+    """
+    return Counter(a) + Counter(b)
