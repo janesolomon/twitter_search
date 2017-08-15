@@ -3,6 +3,10 @@
 """
 Search a Twitter archive (from archive.org) to find the characters which
 occur before and after a chosen target.
+
+-p  : Path to the Twitter archive
+-d  : How many days to search (for testing)
+-hr : How many hours to search (for testing)
 """
 import argparse
 import bz2
@@ -10,7 +14,6 @@ import json
 import multiprocessing
 import os
 import pandas as pd  # pip install pandas
-from collections import Counter
 from unicode_codes import EMOJI_UNICODE
 from timeit import default_timer as timer
 from tqdm import tqdm  # pip install tqdm
@@ -19,7 +22,7 @@ from twitter_search_funcs import find_context, sum_dicts
 # Character to match
 match = EMOJI_UNICODE[':pistol:']
 
-# Counters
+# Global counters
 counter_total_tweets = 0
 counter_total_match = 0
 counter_total_before = 0
