@@ -14,7 +14,7 @@ from collections import Counter
 from unicode_codes import EMOJI_UNICODE
 from timeit import default_timer as timer
 from tqdm import tqdm  # pip install tqdm
-from twitter_search_funcs import find_context
+from twitter_search_funcs import find_context, sum_dicts
 
 # Character to match
 match = EMOJI_UNICODE[':pistol:']
@@ -27,16 +27,6 @@ counter_total_after = 0
 counterdict_before = {}
 counterdict_after = {}
 counterdict_lang = {}
-
-
-def sum_dicts(a, b):
-    """Merge dictionaries, summing their values.
-    For example:
-    a = {"x": 1, "y": 1}
-    b = {"x": 1, "z": 1}
-    returns {"x": 2, "y": 1, "z": 1}
-    """
-    return Counter(a) + Counter(b)
 
 
 def worker(filename):
