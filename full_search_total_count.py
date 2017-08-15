@@ -3,6 +3,10 @@
 """
 Search a Twitter archive (from archive.org) to find the characters which
 occur before and after a chosen target.
+Also counts total number of emoji characters.
+-p  : Path to the Twitter archive
+-d  : How many days to search (for testing)
+-hr : How many hours to search (for testing)
 """
 import argparse
 import bz2
@@ -10,23 +14,24 @@ import json
 import multiprocessing
 import os
 import pandas as pd  # pip install pandas
-from collections import Counter
 from unicode_codes import EMOJI_UNICODE
 from timeit import default_timer as timer
 from tqdm import tqdm  # pip install tqdm
-from twitter_search_funcs import find_context, sum_dicts
+from twitter_search_funcs import find_context, find_all, sum_dicts
 
 # Character to match
 match = EMOJI_UNICODE[':pistol:']
 
-# Counters
+# Global counters
 counter_total_tweets = 0
+counter_total_tweets_wemoji = 0
 counter_total_match = 0
 counter_total_before = 0
 counter_total_after = 0
 counterdict_before = {}
 counterdict_after = {}
 counterdict_lang = {}
+counterdict_all_emoji = {}
 
 
 def worker(filename):
@@ -36,13 +41,16 @@ def worker(filename):
     """
     result_dict = {}
     result_dict['counter_total_tweets'] = 0
+    result_dict['counter_total_tweets_wemoji'] = 0
     result_dict['counter_total_match'] = 0
     result_dict['counter_total_before'] = 0
     result_dict['counter_total_after'] = 0
     result_dict['counterdict_before'] = {}
     result_dict['counterdict_after'] = {}
     result_dict['counterdict_lang'] = {}
+    result_dict['counterdict_all_emoji'] = {}
 
+    # Decompress and decode .bz2 file
     fbz = bz2.BZ2File(filename, 'rb')
     try:
         fdec = fbz.read()
@@ -52,18 +60,36 @@ def worker(filename):
         fbz.close()
     fdecutf = fdec.decode('utf-8')
 
+    # Loop through each line in file
     for t in fdecutf.split('\n'):
+        # Load and check for valid tweet
         try:
             tweet = json.loads(t)
         except (ValueError):
             continue
         if 'delete' in tweet.keys():
             continue
+
+        # Count total number of tweets
         result_dict['counter_total_tweets'] += 1
-        if match in tweet['text']:
+
+        # Count total numbers of emoji in tweet
+        all_emoji, all_count = find_all(tweet['text'])
+        if not all_emoji:
+            continue
+        result_dict['counter_total_tweets_wemoji'] += 1
+        for i, c in enumerate(all_emoji):
+            if c in result_dict['counterdict_all_emoji'].keys():
+                result_dict['counterdict_all_emoji'][c] += all_count[i]
+            else:
+                result_dict['counterdict_all_emoji'][c] = all_count[i]
+
+        # Count number and context of match emoji
+        if match in all_emoji:
             result_dict['counter_total_match'] += 1
             result = find_context(tweet['text'], match)
 
+            # Before match
             if result[0] in EMOJI_UNICODE.values():
                 result_dict['counter_total_before'] += 1
 
@@ -71,7 +97,7 @@ def worker(filename):
                     result_dict['counterdict_before'][result[0]] += 1
                 else:
                     result_dict['counterdict_before'][result[0]] = 1
-
+            # After match
             if result[2] in EMOJI_UNICODE.values():
                 result_dict['counter_total_after'] += 1
 
@@ -108,6 +134,7 @@ if __name__ == "__main__":
         help="How many hours to search (for testing)")
     args = parser.parse_args()
 
+    # Set multiprocessing cpu count
     number_of_processes = multiprocessing.cpu_count()
     multiprocessing.freeze_support()  # Prevent an error on Windows
 
@@ -126,8 +153,10 @@ if __name__ == "__main__":
 
             all_files.extend(files)
 
+    # Create pool of processes
     pool = multiprocessing.Pool(number_of_processes)
     try:
+        # Run worker functions and use tqdm progress bar
         for result_dict in tqdm(pool.imap_unordered(worker,
                                                     all_files,
                                                     chunksize=10),
@@ -136,8 +165,9 @@ if __name__ == "__main__":
 
             if result_dict is None:
                 continue
-
+            # Update all global counters
             counter_total_tweets += result_dict['counter_total_tweets']
+            counter_total_tweets_wemoji += result_dict['counter_total_tweets_wemoji']
             counter_total_match += result_dict['counter_total_match']
             counter_total_before += result_dict['counter_total_before']
             counter_total_after += result_dict['counter_total_after']
@@ -150,6 +180,9 @@ if __name__ == "__main__":
             counterdict_lang = sum_dicts(
                 counterdict_lang,
                 result_dict['counterdict_lang'])
+            counterdict_all_emoji = sum_dicts(
+                counterdict_all_emoji,
+                result_dict['counterdict_all_emoji'])
 
     except KeyboardInterrupt:
         print("KeyboardInterrupt")
@@ -160,11 +193,12 @@ if __name__ == "__main__":
     end_t = timer()
 
     # Print outputs
-    print("Elapsed Time    : {:.2f} min".format((end_t - start_t) / 60))
-    print("Total Tweets    : {:d}".format(counter_total_tweets))
-    print("Total Matches   : {:d}".format(counter_total_match))
-    print("Total w/ Before : {:d}".format(counter_total_before))
-    print("Total w/ After  : {:d}".format(counter_total_after))
+    print("Elapsed Time          : {:.2f} min".format((end_t - start_t) / 60))
+    print("Total Tweets          : {:d}".format(counter_total_tweets))
+    print("Total Tweets w/ Emoji : {:d}".format(counter_total_tweets_wemoji))
+    print("Total Matches         : {:d}".format(counter_total_match))
+    print("Total w/ Before       : {:d}".format(counter_total_before))
+    print("Total w/ After        : {:d}".format(counter_total_after))
 
     # Convert output to dataframe
     df_before = pd.DataFrame(
@@ -173,6 +207,8 @@ if __name__ == "__main__":
         list(counterdict_after.items()), columns=['Emoji', 'CountAfter'])
     df_lang = pd.DataFrame(
         list(counterdict_lang.items()), columns=['Lang', 'Count'])
+    df_allemoji = pd.DataFrame(
+        list(counterdict_all_emoji.items()), columns=['Emoji', 'Count'])
 
     # Merge before and after dataframes
     df_all = pd.merge(df_before, df_after, on='Emoji', how='outer')
@@ -186,5 +222,6 @@ if __name__ == "__main__":
                        ascending=False).head(20).plot.bar(y='CountAfter')
 
     # Export results as CSV files
-    df_all.to_csv("./alldata.csv", encoding="utf-8")
-    df_lang.to_csv("./langdata.csv", encoding="utf-8")
+    df_all.to_csv("./alldata.csv", encoding='utf-8')
+    df_lang.to_csv("./langdata.csv", encoding='utf-8')
+    df_allemoji.to_csv("./allemojidata.csv", encoding='utf-8')
