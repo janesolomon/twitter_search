@@ -87,8 +87,8 @@ def find_all(tweet):
 
 def smoothed_relative_freq(n_focus, n_ref, size_focus, size_ref, N=1):
     """Simple maths method for finding relative frequency of a word in the
-    f_focus corpus compared to the reference corpus. Frequencies are
-    calculated per million and N is the smoothing paramter (default N = 1)."""
+    focus corpus compared to the reference corpus. Frequencies are
+    calculated per million and N is the smoothing parameter (default N = 1)."""
 
     f_focus = n_focus * 1.e6 / size_focus
     f_ref = n_ref * 1.e6 / size_ref
