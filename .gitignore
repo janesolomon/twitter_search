@@ -23,8 +23,7 @@ var/
 wheels/
 *.egg-info/
 .installed.cfg
-*.egg
-data/
+*.egg/
 
 # DS Store
 .DS_Store
