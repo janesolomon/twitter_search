@@ -1,0 +1,6 @@
+Elapsed Time          : 86.89 min
+Total Tweets          : 118394269
+Total Tweets w/ Emoji : 18219609
+Total Matches         : 65405
+Total w/ Before       : 38695
+Total w/ After        : 21245
