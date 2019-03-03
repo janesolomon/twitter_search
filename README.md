@@ -15,4 +15,4 @@ langdata2016.csv
 This file is a breakdown of langauges in this dataset
 
 log2016.txt
-This file is a log of counts for emoji appearing before and after the gun emoji this dataset
+This file is a log of counts for emoji appearing before and after the gun emoji in this dataset
