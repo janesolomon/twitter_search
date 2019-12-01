@@ -8,8 +8,11 @@ python:
 
 cache: pip
 
-install:
+before_install:
   - pip install coverage pyflakes
+
+install:
+  - pip install .
 
 script:
 

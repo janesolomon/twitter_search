@@ -33,9 +33,15 @@ counterdict_lang = {}
 
 
 def worker(filename):
-    """ The worker function, invoked in a process. 'filename' is a
-        zipped file of tweets to process. Results will be retuned in
-        'result_dict'
+    """The worker function, invoked in a process. 'filename' is a
+    zipped file of tweets to process. Results will be returned in
+    'result_dict'
+
+    Args:
+        filename (str): Zipped file of tweets to process
+
+    Returns:
+        dict: result_dict
     """
     result_dict = {}
     result_dict['counter_total_tweets'] = 0

@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-twittersearchfuncs.py
 Functions for searching Twitter json
 
 """
@@ -21,7 +20,7 @@ def find_context(tweet, char):
 
     Args:
         tweet (str): Tweet text
-        char (str): Charcter to search for
+        char (str): Character to search for
 
     Returns:
         tuple
@@ -106,11 +105,11 @@ def smoothed_relative_freq(n_focus, n_ref, size_focus, size_ref, N=1):
     calculated per million and N is the smoothing parameter (default N = 1).
 
     Args:
-        n_focus (int): Description
-        n_ref (int): Description
-        size_focus (int): Description
-        size_ref (int): Description
-        N (int, optional): Description
+        n_focus (int): Number of target words in focus corpus
+        n_ref (int): Number of target words in reference corpus
+        size_focus (int): Size of focus corpus
+        size_ref (int): Size of reference corpus
+        N (int, optional): Smoothing parameter
 
     Returns:
         float
@@ -133,7 +132,7 @@ def sum_dicts(a, b):
     Args:
         a (dict)
         b (dict)
-    
+
     Returns:
         dict
     """

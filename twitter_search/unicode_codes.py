@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """
-Data literal storing emoji names and unicode codes
+Data literal storing emoji names and unicode code points
 
 Copy of https://github.com/carpedm20/emoji/blob/master/emoji/unicode_codes.py
 
