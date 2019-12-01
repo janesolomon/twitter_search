@@ -13,10 +13,10 @@ import bz2
 import json
 import multiprocessing
 import os
-import pandas as pd  # pip install pandas
+import pandas as pd
 from unicode_codes import EMOJI_UNICODE
 from timeit import default_timer as timer
-from tqdm import tqdm  # pip install tqdm
+from tqdm import tqdm
 from twitter_search_funcs import find_context, sum_dicts
 
 # Character to match
