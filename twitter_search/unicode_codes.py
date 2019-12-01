@@ -5,8 +5,14 @@
 Data literal storing emoji names and unicode codes
 
 Copy of https://github.com/carpedm20/emoji/blob/master/emoji/unicode_codes.py
-"""
 
+Attributes:
+    EMOJI_ALIAS_UNICODE (dict): Emoji alias to unicode mapping
+    EMOJI_UNICODE (dict): Emoji name to unicode mapping
+    EMOJI_UNICODE_SET (set): Set of all emoji unicode code points
+    UNICODE_EMOJI (dict): Unicode to emoji name mapping
+    UNICODE_EMOJI_ALIAS (dict): Unicode to emoji alias mapping
+"""
 
 __all__ = ['EMOJI_UNICODE', 'UNICODE_EMOJI', 'EMOJI_ALIAS_UNICODE', 'UNICODE_EMOJI_ALIAS', 'EMOJI_UNICODE_SET']
 

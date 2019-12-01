@@ -2,8 +2,8 @@
 # encoding: utf-8
 """
 Search a Twitter archive (from archive.org) to find the characters which
-occur before and after a chosen target.
-Also counts total number of emoji characters.
+occur before and after a chosen target. Also counts total number of emoji characters.
+
 -p  : Path to the Twitter archive
 -d  : How many days to search (for testing)
 -hr : How many hours to search (for testing)

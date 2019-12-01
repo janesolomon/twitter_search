@@ -6,10 +6,10 @@ Functions for searching Twitter json
 
 """
 from collections import Counter
-from unicode_codes import EMOJI_UNICODE_SET
+from twitter_search.unicode_codes import EMOJI_UNICODE_SET
 
-__author__ = "Jane Solomon and Jeremy Smith"
-__version__ = "1.0"
+
+__all__ = ["find_context", "find_all", "smoothed_relative_freq", "sum_dicts"]
 
 
 def find_context(tweet, char):
@@ -17,7 +17,15 @@ def find_context(tweet, char):
     both character and word. Ignores spaces for the nearest character search.
     Leaves new line character in results to avoid associating character
     separated by a new line as a nearest neighbor. Only searches for
-    the first instance of the character."""
+    the first instance of the character.
+
+    Args:
+        tweet (str): Tweet text
+        char (str): Charcter to search for
+
+    Returns:
+        tuple
+    """
 
     # Tweet split into a list of words
     tweet_word_list = tweet.split(' ')
@@ -63,7 +71,14 @@ def find_context(tweet, char):
 
 def find_all(tweet):
     """Finds all occurrences of emoji in a tweet. Returns a list of those
-    and their counts."""
+    and their counts.
+
+    Args:
+        tweet (str): Tweet text
+
+    Returns:
+        tuple
+    """
 
     # Tweet split into a list of words
     tweet_word_list = tweet.split(' ')
@@ -88,7 +103,18 @@ def find_all(tweet):
 def smoothed_relative_freq(n_focus, n_ref, size_focus, size_ref, N=1):
     """Simple maths method for finding relative frequency of a word in the
     focus corpus compared to the reference corpus. Frequencies are
-    calculated per million and N is the smoothing parameter (default N = 1)."""
+    calculated per million and N is the smoothing parameter (default N = 1).
+
+    Args:
+        n_focus (int): Description
+        n_ref (int): Description
+        size_focus (int): Description
+        size_ref (int): Description
+        N (int, optional): Description
+
+    Returns:
+        float
+    """
 
     f_focus = n_focus * 1.e6 / size_focus
     f_ref = n_ref * 1.e6 / size_ref
@@ -98,9 +124,17 @@ def smoothed_relative_freq(n_focus, n_ref, size_focus, size_ref, N=1):
 
 def sum_dicts(a, b):
     """Merge dictionaries, summing their values.
+
     For example:
-    a = {"x": 1, "y": 1}
-    b = {"x": 1, "z": 1}
-    returns {"x": 2, "y": 1, "z": 1}
+        a = {"x": 1, "y": 1}
+        b = {"x": 1, "z": 1}
+        returns {"x": 2, "y": 1, "z": 1}
+
+    Args:
+        a (dict)
+        b (dict)
+    
+    Returns:
+        dict
     """
     return Counter(a) + Counter(b)
