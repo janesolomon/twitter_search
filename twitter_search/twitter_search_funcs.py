@@ -11,6 +11,24 @@ from twitter_search.unicode_codes import EMOJI_UNICODE_SET
 __all__ = ["find_context", "find_all", "smoothed_relative_freq", "sum_dicts"]
 
 
+def _list_clean(tweet):
+    """Splits the tweet into words based on spaces and returns this list
+    along with a concatenated string without spaces.
+
+    Args:
+        tweet (str): Tweet text
+
+    Returns:
+        tuple
+    """
+    # Tweet split into a list of words
+    tweet_word_list = tweet.split(" ")
+    # Tweet rejoined into string thus removing all spaces
+    tweet_clean = "".join(tweet_word_list)
+
+    return tweet_word_list, tweet_clean
+
+
 def find_context(tweet, char):
     """Finds a character (char) in tweet and its nearest neighbors
     both character and word. Ignores spaces for the nearest character search.
@@ -26,10 +44,8 @@ def find_context(tweet, char):
         tuple
     """
 
-    # Tweet split into a list of words
-    tweet_word_list = tweet.split(' ')
-    # Tweet rejoined into string thus removing all spaces
-    tweet_clean = "".join(tweet_word_list)
+    # Clean tweet
+    tweet_word_list, tweet_clean = _list_clean(tweet)
     # Location of character
     loc = tweet_clean.find(char)
     # If character is not found (i.e. loc = -1) then return None
@@ -79,10 +95,9 @@ def find_all(tweet):
         tuple
     """
 
-    # Tweet split into a list of words
-    tweet_word_list = tweet.split(' ')
-    # Tweet rejoined into string thus removing all spaces
-    tweet_clean = "".join(tweet_word_list)
+    # Clean tweet
+    tweet_word_list, tweet_clean = _list_clean(tweet)
+
     # Tweet characters split into list
     tweet_clean_charlist = list(tweet_clean)
 

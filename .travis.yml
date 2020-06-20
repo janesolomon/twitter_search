@@ -20,7 +20,7 @@ script:
   - pyflakes .
 
   # Unit tests
-  - coverage run --include=twitter_search_funcs.py test_twitter_search_funcs.py
+  - coverage run
 
 after_success:
   # Report coverage and send to Codecov
