@@ -5,7 +5,7 @@ Unit tests for twitter_search_funcs.py
 from __future__ import print_function, unicode_literals
 
 import unittest
-from twitter_search_funcs import find_context, find_all, smoothed_relative_freq
+from twitter_search import find_context, find_all, smoothed_relative_freq
 
 
 class TestFindContext(unittest.TestCase):
@@ -111,8 +111,8 @@ class TestFindAll(unittest.TestCase):
         tweet = "multiple emoji 😍 in text 😂😂"
         matches, counts = find_all(tweet)
 
-        self.assertEqual(matches, ["😍", "😂"])
-        self.assertEqual(counts, [1, 2])
+        self.assertCountEqual(matches, ["😍", "😂"])
+        self.assertCountEqual(counts, [1, 2])
 
 
 class TestSmoothedRelativeFreq(unittest.TestCase):
@@ -121,13 +121,13 @@ class TestSmoothedRelativeFreq(unittest.TestCase):
     def test_smoothed_relative_freq(self):
         """Test smoothed relative frequency function
         """
-        rel_freq_1 = smoothed_relative_freq(12, 123, 1e6, 1e7, N=1)
-        rel_freq_10 = smoothed_relative_freq(12, 123, 1e6, 1e7, N=10)
-        rel_freq_100 = smoothed_relative_freq(12, 123, 1e6, 1e7, N=100)
+        rel_freq_1 = smoothed_relative_freq(12, 321, 1e6, 1e7, N=1)
+        rel_freq_10 = smoothed_relative_freq(12, 321, 1e6, 1e7, N=10)
+        rel_freq_100 = smoothed_relative_freq(12, 321, 1e6, 1e7, N=100)
 
-        self.assertEqual(rel_freq_1, )
-        self.assertEqual(rel_freq_10)
-        self.assertEqual(rel_freq_100)
+        self.assertAlmostEqual(rel_freq_1, 0.3927492447)
+        self.assertAlmostEqual(rel_freq_10, 0.5225653207)
+        self.assertAlmostEqual(rel_freq_100, 0.8478425435)
 
 
 if __name__ == '__main__':

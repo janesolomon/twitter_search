@@ -9,7 +9,7 @@ python:
 cache: pip
 
 before_install:
-  - pip install coverage pyflakes
+  - pip install coverage flake8
 
 install:
   - pip install .
@@ -17,10 +17,10 @@ install:
 script:
 
   # Static analysis
-  - pyflakes .
+  - flake8 .
 
   # Unit tests
-  - coverage run
+  - coverage run twitter_search/tests/*
 
 after_success:
   # Report coverage and send to Codecov

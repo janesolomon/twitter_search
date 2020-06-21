@@ -14,7 +14,13 @@ Attributes:
     UNICODE_EMOJI_ALIAS (dict): Unicode to emoji alias mapping
 """
 
-__all__ = ['EMOJI_UNICODE', 'UNICODE_EMOJI', 'EMOJI_ALIAS_UNICODE', 'UNICODE_EMOJI_ALIAS', 'EMOJI_UNICODE_SET']
+__all__ = [
+    'EMOJI_UNICODE',
+    'UNICODE_EMOJI',
+    'EMOJI_ALIAS_UNICODE',
+    'UNICODE_EMOJI_ALIAS',
+    'EMOJI_UNICODE_SET'
+]
 
 
 EMOJI_UNICODE = {
