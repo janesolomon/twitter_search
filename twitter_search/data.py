@@ -65,7 +65,10 @@ def get_all_files(data_path, days=31, hours=24):
         for hour in range(hours):
             hour_str = "{:02d}".format(hour)
             file_path = os.path.join(data_path, day_str, hour_str)
-            files = os.listdir(file_path)
+            try:
+                files = os.listdir(file_path)
+            except FileNotFoundError:
+                continue
 
             for i, file in enumerate(files):
                 files[i] = os.path.join(file_path, file)
