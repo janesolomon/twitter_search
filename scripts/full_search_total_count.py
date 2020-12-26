@@ -10,12 +10,13 @@ occur before and after a chosen target. Also counts total number of emoji charac
 """
 import argparse
 import multiprocessing
-import pandas as pd
 from timeit import default_timer as timer
+
+import pandas as pd
 from tqdm import tqdm
 
-from twitter_search import find_context, find_all, sum_dicts
-from twitter_search.data import read_zip, unpack_files, get_all_files
+from twitter_search import find_all, find_context, sum_dicts
+from twitter_search.data import get_all_files, read_zip, unpack_files
 from twitter_search.unicode_codes import EMOJI_UNICODE
 
 

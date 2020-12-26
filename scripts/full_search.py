@@ -11,10 +11,12 @@ occur before and after a chosen target.
 import argparse
 import multiprocessing
 import os
-import pandas as pd
-from unicode_codes import EMOJI_UNICODE
 from timeit import default_timer as timer
+
+import pandas as pd
 from tqdm import tqdm
+from unicode_codes import EMOJI_UNICODE
+
 from twitter_search import find_context, sum_dicts
 from twitter_search.data import read_zip
 

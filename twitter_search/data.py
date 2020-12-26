@@ -3,9 +3,9 @@
 """
 Functions reading twitter data dumps
 """
-import os
-import json
 import bz2
+import json
+import os
 import tarfile
 
 

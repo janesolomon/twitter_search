@@ -5,8 +5,8 @@ Functions for searching Twitter json
 
 """
 from collections import Counter
-from twitter_search.unicode_codes import EMOJI_UNICODE_SET
 
+from twitter_search.unicode_codes import EMOJI_UNICODE_SET
 
 __all__ = ["find_context", "find_all", "smoothed_relative_freq", "sum_dicts"]
 
@@ -130,8 +130,8 @@ def smoothed_relative_freq(n_focus, n_ref, size_focus, size_ref, N=1):
         float
     """
 
-    f_focus = n_focus * 1.e6 / size_focus
-    f_ref = n_ref * 1.e6 / size_ref
+    f_focus = n_focus * 1.0e6 / size_focus
+    f_ref = n_ref * 1.0e6 / size_ref
 
     return (f_focus + N) / (f_ref + N)
 
