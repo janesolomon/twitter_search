@@ -132,6 +132,9 @@ def parse_cli_args():
     parser.add_argument(
         "-hr", "--hours", type=int, default=24, help="How many hours to search (for testing)"
     )
+    parser.add_argument(
+        "-u", "--unpack", default=False, action="store_true", help="Unpack tar files"
+    )
     return parser.parse_args()
 
 
@@ -222,9 +225,10 @@ if __name__ == "__main__":
     MATCH = EMOJI_UNICODE[":pistol:"]
 
     # Unpack and list all files
-    unpack_files(args.data_path)
+    if args.unpack:
+        unpack_files(args.data_path)
     all_files = get_all_files(args.data_path, days=args.days, hours=args.hours)
 
-    # # Main search loop
-    # RESULTS_GLOBAL = run()
-    # save_results(RESULTS_GLOBAL)
+    # Main search loop
+    RESULTS_GLOBAL = run()
+    save_results(RESULTS_GLOBAL)
