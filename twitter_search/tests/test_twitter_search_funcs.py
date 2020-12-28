@@ -6,7 +6,7 @@ from __future__ import print_function, unicode_literals
 
 import unittest
 
-from twitter_search import find_all, find_context, smoothed_relative_freq
+from twitter_search import find_all, find_all_if, find_context, smoothed_relative_freq
 
 
 class TestFindContext(unittest.TestCase):
@@ -105,6 +105,46 @@ class TestFindAll(unittest.TestCase):
 
         self.assertCountEqual(matches, ["😍", "😂"])
         self.assertCountEqual(counts, [1, 2])
+
+
+class TestFindAllIf(unittest.TestCase):
+    """Test find all if function"""
+
+    def test_find_all_if_not_found(self):
+        """Test for no emoji in text"""
+        tweet = "no emoji in text"
+        chars = ["😍", "💔", "💕"]
+        matches, counts = find_all_if(tweet, chars)
+
+        self.assertIsNone(matches)
+        self.assertIsNone(counts)
+
+    def test_find_all_if_not_found_emoji(self):
+        """Test for emoji in text but no matches to chars"""
+        tweet = "emoji in text but not in chars 😂"
+        chars = ["😍", "💔", "💕"]
+        matches, counts = find_all_if(tweet, chars)
+
+        self.assertIsNone(matches)
+        self.assertIsNone(counts)
+
+    def test_find_all_list_only(self):
+        """Test for matches to chars only"""
+        tweet = "emoji from chars 💕 in text 😍"
+        chars = ["😍", "💔", "💕"]
+        matches, counts = find_all_if(tweet, chars)
+
+        self.assertCountEqual(matches, ["💕", "😍"])
+        self.assertCountEqual(counts, [1, 1])
+
+    def test_find_all_any(self):
+        """Test for matches to chars and other emoji in text"""
+        tweet = "multiple 💔💔 emoji 😍 in text 😂😂😂"
+        chars = ["😍", "💔", "💕"]
+        matches, counts = find_all_if(tweet, chars)
+
+        self.assertCountEqual(matches, ["💔", "😍", "😂"])
+        self.assertCountEqual(counts, [2, 1, 3])
 
 
 class TestSmoothedRelativeFreq(unittest.TestCase):

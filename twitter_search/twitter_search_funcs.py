@@ -8,7 +8,7 @@ from collections import Counter
 
 from twitter_search.unicode_codes import EMOJI_UNICODE_SET
 
-__all__ = ["find_context", "find_all", "smoothed_relative_freq", "sum_dicts"]
+__all__ = ["find_context", "find_all", "find_all_if", "smoothed_relative_freq", "sum_dicts"]
 
 
 def _list_clean(tweet):
@@ -107,6 +107,37 @@ def find_all(tweet):
     # Check if there are any matches and return if not
     if len(matches) == 0:
         return None, None
+
+    # Count number of each emoji
+    counts = [tweet.count(c) for c in matches]
+
+    return matches, counts
+
+
+def find_all_if(tweet, chars):
+    """Find all occurrences of emoji in a tweet when any of `chars` are
+    present in the tweet. Includes counts of emoji in the `chars` list.
+    Returns a list of those emoji and their counts.
+
+    Args:
+        tweet (str): Tweet text
+        chars (List[str]): List of characters to search for
+
+    Returns:
+        tuple
+    """
+
+    # Clean tweet
+    tweet_word_list, tweet_clean = _list_clean(tweet)
+
+    # Tweet characters split into list
+    tweet_clean_charlist = list(tweet_clean)
+
+    if not any(char in chars for char in tweet_clean_charlist):
+        return None, None
+
+    # Find matches using intersection of emoji list and tweet
+    matches = list(EMOJI_UNICODE_SET.intersection(tweet_clean_charlist))
 
     # Count number of each emoji
     counts = [tweet.count(c) for c in matches]
