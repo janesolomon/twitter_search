@@ -43,6 +43,30 @@ class Results:
         self.counterdict_all_emoji = {}
         self.counterdict_all_emoji_if_match = {}
 
+        self.counterdict_all_emoji_if_clockfaces = {}
+        self.counterdict_all_emoji_if_hourglasses = {}
+        self.counterdict_all_emoji_if_soon = {}
+        self.counterdict_all_emoji_if_watch = {}
+        self.counterdict_all_emoji_if_stopwatch = {}
+        self.counterdict_all_emoji_if_mantelpiece_clock = {}
+        self.counterdict_all_emoji_if_timer_clock = {}
+        self.counterdict_all_emoji_if_alarm_clock = {}
+
+    def add_to(self, key, val, attr):
+        """Adds a value to an given dictionary key for a given attribiute of the class.
+
+        Args:
+            key (str)
+            val (int)
+            attr (str)
+        """
+        d = getattr(self, attr)
+        if key in d.keys():
+            d[key] += val
+        else:
+            d[key] = val
+        setattr(self, attr, d)
+
 
 def worker(filename):
     """The worker function, invoked in a process.
@@ -72,7 +96,7 @@ def worker(filename):
                 results.counterdict_all_emoji[c] = all_count[i]
 
         # Count total numbers of emoji in tweet when there is a match
-        all_emoji, all_count = find_all_if(tweet["text"], MATCHES)
+        all_emoji, all_count = find_all_if(tweet["text"], MATCHES_ALL)
         if not all_emoji:
             continue
         results.counter_total_match += 1
@@ -89,6 +113,15 @@ def worker(filename):
                 results.counterdict_lang[tweet["lang"]] = 1
         except KeyError:
             continue
+
+        # Count total numbers of emoji in tweet for each match subset
+        for group in MATCHES:
+            all_emoji, all_count = find_all_if(tweet["text"], MATCHES[group])
+            if not all_emoji:
+                continue
+            for i, c in enumerate(all_emoji):
+                attr_name = "counterdict_all_emoji_if_{}".format(group)
+                results.add_to(c, all_count[i], attr_name)
 
     return results
 
@@ -156,6 +189,40 @@ def run():
                 results_global.counterdict_all_emoji_if_match,
                 results.counterdict_all_emoji_if_match
             )
+
+            results_global.counterdict_all_emoji_if_clockfaces = sum_dicts(
+                results_global.counterdict_all_emoji_if_clockfaces,
+                results.counterdict_all_emoji_if_clockfaces
+            )
+            results_global.counterdict_all_emoji_if_hourglasses = sum_dicts(
+                results_global.counterdict_all_emoji_if_hourglasses,
+                results.counterdict_all_emoji_if_hourglasses
+            )
+            results_global.counterdict_all_emoji_if_soon = sum_dicts(
+                results_global.counterdict_all_emoji_if_soon,
+                results.counterdict_all_emoji_if_soon
+            )
+            results_global.counterdict_all_emoji_if_watch = sum_dicts(
+                results_global.counterdict_all_emoji_if_watch,
+                results.counterdict_all_emoji_if_watch
+            )
+            results_global.counterdict_all_emoji_if_stopwatch = sum_dicts(
+                results_global.counterdict_all_emoji_if_stopwatch,
+                results.counterdict_all_emoji_if_stopwatch
+            )
+            results_global.counterdict_all_emoji_if_mantelpiece_clock = sum_dicts(
+                results_global.counterdict_all_emoji_if_mantelpiece_clock,
+                results.counterdict_all_emoji_if_mantelpiece_clock
+            )
+            results_global.counterdict_all_emoji_if_timer_clock = sum_dicts(
+                results_global.counterdict_all_emoji_if_timer_clock,
+                results.counterdict_all_emoji_if_timer_clock
+            )
+            results_global.counterdict_all_emoji_if_alarm_clock = sum_dicts(
+                results_global.counterdict_all_emoji_if_alarm_clock,
+                results.counterdict_all_emoji_if_alarm_clock
+            )
+
     except KeyboardInterrupt:
         print("KeyboardInterrupt")
     finally:
@@ -181,10 +248,45 @@ def save_results(results):
     df_allemoji_match = pd.DataFrame(
         list(results.counterdict_all_emoji_if_match.items()), columns=["Emoji", "Count"]
     )
+
+    df_allemoji_clockfaces = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_clockfaces.items()), columns=["Emoji", "Count"]
+    )
+    df_allemoji_hourglasses = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_hourglasses.items()), columns=["Emoji", "Count"]
+    )
+    df_allemoji_soon = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_soon.items()), columns=["Emoji", "Count"]
+    )
+    df_allemoji_watch = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_watch.items()), columns=["Emoji", "Count"]
+    )
+    df_allemoji_stopwatch = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_stopwatch.items()), columns=["Emoji", "Count"]
+    )
+    df_allemoji_mantelpiece_clock = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_mantelpiece_clock.items()), columns=["Emoji", "Count"]
+    )
+    df_allemoji_timer_clock = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_timer_clock.items()), columns=["Emoji", "Count"]
+    )
+    df_allemoji_alarm_clock = pd.DataFrame(
+        list(results.counterdict_all_emoji_if_alarm_clock.items()), columns=["Emoji", "Count"]
+    )
+
     # Export results as CSV files
     df_lang.to_csv("./langdata.csv", encoding="utf-8")
     df_allemoji.to_csv("./allemojidata.csv", encoding="utf-8")
     df_allemoji_match.to_csv("./allemojidatamatch.csv", encoding="utf-8")
+
+    df_allemoji_clockfaces.to_csv("./allemojidatamatch_clockfaces.csv", encoding="utf-8")
+    df_allemoji_hourglasses.to_csv("./allemojidatamatch_hourglasses.csv", encoding="utf-8")
+    df_allemoji_soon.to_csv("./allemojidatamatch_soon.csv", encoding="utf-8")
+    df_allemoji_watch.to_csv("./allemojidatamatch_watch.csv", encoding="utf-8")
+    df_allemoji_stopwatch.to_csv("./allemojidatamatch_stopwatch.csv", encoding="utf-8")
+    df_allemoji_mantelpiece_clock.to_csv("./allemojidatamatch_mantelpiece_clock.csv", encoding="utf-8")
+    df_allemoji_timer_clock.to_csv("./allemojidatamatch_timer_clock.csv", encoding="utf-8")
+    df_allemoji_alarm_clock.to_csv("./allemojidatamatch_alarm_clock.csv", encoding="utf-8")
 
 
 if __name__ == "__main__":
@@ -192,43 +294,48 @@ if __name__ == "__main__":
     args = parse_cli_args()
 
     # Characters to match
-    MATCHES = [
-        # O'clock emoji
-        EMOJI_UNICODE[":one_o\u2019clock:"],
-        EMOJI_UNICODE[":two_o\u2019clock:"],
-        EMOJI_UNICODE[":three_o\u2019clock:"],
-        EMOJI_UNICODE[":four_o\u2019clock:"],
-        EMOJI_UNICODE[":five_o\u2019clock:"],
-        EMOJI_UNICODE[":six_o\u2019clock:"],
-        EMOJI_UNICODE[":seven_o\u2019clock:"],
-        EMOJI_UNICODE[":eight_o\u2019clock:"],
-        EMOJI_UNICODE[":nine_o\u2019clock:"],
-        EMOJI_UNICODE[":ten_o\u2019clock:"],
-        EMOJI_UNICODE[":eleven_o\u2019clock:"],
-        EMOJI_UNICODE[":twelve_o\u2019clock:"],
-        # Half past the hour emoji
-        EMOJI_UNICODE[":one-thirty:"],
-        EMOJI_UNICODE[":two-thirty:"],
-        EMOJI_UNICODE[":three-thirty:"],
-        EMOJI_UNICODE[":four-thirty:"],
-        EMOJI_UNICODE[":five-thirty:"],
-        EMOJI_UNICODE[":six-thirty:"],
-        EMOJI_UNICODE[":seven-thirty:"],
-        EMOJI_UNICODE[":eight-thirty:"],
-        EMOJI_UNICODE[":nine-thirty:"],
-        EMOJI_UNICODE[":ten-thirty:"],
-        EMOJI_UNICODE[":eleven-thirty:"],
-        EMOJI_UNICODE[":twelve-thirty:"],
+    MATCHES = {
+        "clockfaces": [
+            # O'clock emoji
+            EMOJI_UNICODE[":one_o\u2019clock:"],
+            EMOJI_UNICODE[":two_o\u2019clock:"],
+            EMOJI_UNICODE[":three_o\u2019clock:"],
+            EMOJI_UNICODE[":four_o\u2019clock:"],
+            EMOJI_UNICODE[":five_o\u2019clock:"],
+            EMOJI_UNICODE[":six_o\u2019clock:"],
+            EMOJI_UNICODE[":seven_o\u2019clock:"],
+            EMOJI_UNICODE[":eight_o\u2019clock:"],
+            EMOJI_UNICODE[":nine_o\u2019clock:"],
+            EMOJI_UNICODE[":ten_o\u2019clock:"],
+            EMOJI_UNICODE[":eleven_o\u2019clock:"],
+            EMOJI_UNICODE[":twelve_o\u2019clock:"],
+            # Half past the hour emoji
+            EMOJI_UNICODE[":one-thirty:"],
+            EMOJI_UNICODE[":two-thirty:"],
+            EMOJI_UNICODE[":three-thirty:"],
+            EMOJI_UNICODE[":four-thirty:"],
+            EMOJI_UNICODE[":five-thirty:"],
+            EMOJI_UNICODE[":six-thirty:"],
+            EMOJI_UNICODE[":seven-thirty:"],
+            EMOJI_UNICODE[":eight-thirty:"],
+            EMOJI_UNICODE[":nine-thirty:"],
+            EMOJI_UNICODE[":ten-thirty:"],
+            EMOJI_UNICODE[":eleven-thirty:"],
+            EMOJI_UNICODE[":twelve-thirty:"],
+        ],
         # Other clock and time related emoji
-        EMOJI_UNICODE[":alarm_clock:"],
-        EMOJI_UNICODE[":timer_clock:"],
-        EMOJI_UNICODE[":mantelpiece_clock:"],
-        EMOJI_UNICODE[":stopwatch:"],
-        EMOJI_UNICODE[":watch:"],
-        EMOJI_UNICODE[":hourglass_done:"],
-        EMOJI_UNICODE[":hourglass_not_done:"],
-        EMOJI_UNICODE[":SOON_arrow:"],
-    ]
+        "hourglasses": [
+            EMOJI_UNICODE[":hourglass_done:"],
+            EMOJI_UNICODE[":hourglass_not_done:"],
+        ],
+        "soon": [EMOJI_UNICODE[":SOON_arrow:"]],
+        "watch": [EMOJI_UNICODE[":watch:"]],
+        "stopwatch": [EMOJI_UNICODE[":stopwatch:"]],
+        "mantelpiece_clock": [EMOJI_UNICODE[":mantelpiece_clock:"]],
+        "timer_clock": [EMOJI_UNICODE[":timer_clock:"]],
+        "alarm_clock": [EMOJI_UNICODE[":alarm_clock:"]],
+    }
+    MATCHES_ALL = [emoji for lst in MATCHES.values() for emoji in lst]
 
     # Unpack and list all files
     if args.unpack:
