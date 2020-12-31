@@ -3,22 +3,23 @@ language: python
 python:
   - 3.7
   - 3.6
-  - 2.7
   - 3.5
-  - 3.4
 
 cache: pip
 
+before_install:
+  - pip install coverage flake8
+
 install:
-  - pip install coverage pyflakes
+  - pip install .
 
 script:
 
   # Static analysis
-  - pyflakes .
+  - flake8 .
 
   # Unit tests
-  - coverage run --include=twitter_search_funcs.py test_twitter_search_funcs.py
+  - coverage run twitter_search/tests/*
 
 after_success:
   # Report coverage and send to Codecov

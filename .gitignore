@@ -31,3 +31,13 @@ wheels/
 # Testing
 .coverage
 htmlcov
+
+# Binary data
+.zip
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
